@@ -1,0 +1,19 @@
+PRAGMA foreign_keys=OFF;
+BEGIN TRANSACTION;
+CREATE TABLE IF NOT EXISTS "Images" (
+    "Id" INTEGER NOT NULL CONSTRAINT "PK_Images" PRIMARY KEY AUTOINCREMENT,
+    "Path" TEXT NOT NULL,
+    "Name" TEXT NOT NULL,
+    "Desc" TEXT NOT NULL,
+    "TimeStamp" INTEGER NOT NULL,
+    "Height" INTEGER NOT NULL,
+    "Width" INTEGER NOT NULL,
+    "Size" INTEGER NOT NULL
+);
+INSERT INTO Images VALUES(1,'./uploads/96238334_p0.jpg','96238334_p0.jpg','some description',1743089137,1415,1500,677534);
+INSERT INTO Images VALUES(2,'./uploads/114463869_p0.jpg','114463869_p0.jpg','some description',1743089173,2400,1080,551393);
+INSERT INTO Images VALUES(3,'./uploads/115841185_p3.jpg','115841185_p3.jpg','some description',1743089181,2000,2800,2946475);
+INSERT INTO Images VALUES(4,'./uploads/111415376_p0.jpg','111415376_p0.jpg','some description',1743089267,1360,2274,513367);
+INSERT INTO Images VALUES(5,'./uploads/深入敌腹.jpg','深入敌腹.jpg','some description',1743089551,1054,2107,700575);
+COMMIT;
+

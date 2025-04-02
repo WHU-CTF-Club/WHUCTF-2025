@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notice Board</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .notice {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .notice h2 {
+            margin: 0 0 5px;
+            font-size: 18px;
+        }
+        .notice small {
+            margin: 5px 0;
+            color: #888;
+        }
+        .notice p {
+            color: #555;
+        }
+        .edit {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>各语言自治委员会公告</h1>
+    <div id="notice-board">加载中...</div>
+    <div id="edit"></div>
+    <script>
+        (() => {
+            fetch('/api/notice')
+                .then(response => response.json())
+                .then(data => {
+                    const board = document.getElementById('notice-board');
+                    board.innerHTML = '';
+                    if (data.length === 0) {
+                        board.innerHTML = '<p style="text-align:center; color: #888;">暂无公告</p>';
+                    } else {
+                        data.forEach(notice => {
+                            const noticeElement = document.createElement('div');
+                            noticeElement.className = 'notice';
+                            noticeElement.innerHTML = `
+                                <h2>${notice.title}</h2>
+                                <small>${notice.number}</small>
+                                <p>${notice.content}</p>
+                            `;
+                            board.appendChild(noticeElement);
+                        });
+                        const edit = document.getElementById('edit');
+                        edit.innerHTML =`
+                        <div>
+                            <p class="edit"><a href="/edit.html">编辑</a></p>
+                        </div>`;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('notice-board').innerHTML = '<p style="text-align:center; color: red;">加载失败</p>';
+                });
+        })();
+    </script>
+</body>
+</html>

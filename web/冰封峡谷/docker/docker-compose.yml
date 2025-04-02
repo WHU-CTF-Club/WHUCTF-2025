@@ -1,0 +1,8 @@
+services:
+  web:
+    image: sign
+    build: ..
+    ports:
+      - "8000:80"
+    environment:
+      - FLAG=whuctf{sign_in_web_is_easy}

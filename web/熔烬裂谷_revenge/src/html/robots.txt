@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: flag
+//渗透第一步：信息收集

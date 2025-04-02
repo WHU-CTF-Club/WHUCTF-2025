@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>修改公告</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .edit-form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .edit-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .edit-form select, .edit-form input, .edit-form textarea {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .edit-form button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .save {
+            background: #007bff;
+        }
+        .save:hover {
+            background: #0056b3;
+        }
+        .delete {
+            background: #ff1e1e;
+        }
+        .delete:hover {
+            background: #c91717;
+        }
+        .error-message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>修改公告</h1>
+    <div class="edit-form">
+        <label for="notice-select">选择公告</label>
+        <select id="notice-select" onchange="loadNotice()">
+            <option value="">请选择公告(选此新建)</option>
+        </select>
+
+        <label for="title">标题</label>
+        <input type="text" id="title" placeholder="输入公告标题" required>
+
+        <label for="number">编号(请勿修改)</label>
+        <input type="text" id="number" placeholder="输入编号" required>
+        
+        <label for="content">内容</label>
+        <textarea id="content" placeholder="输入公告内容" rows="4" required></textarea>
+        
+        <button onclick="updateNotice()" class="save">保存修改</button>
+        <button onclick="deleteNotice()" class="delete">删除公告</button>
+        <p id="error-message" class="error-message"></p>
+    </div>
+
+    <script>
+        const authData = localStorage.getItem("Authorization");
+        if (!authData) {
+            window.location.href = "login.html";
+        }
+        const { token, expiresAt } = JSON.parse(authData);
+        function checkToken() {
+            if (!token) {
+                window.location.href = "login.html";
+            };
+
+            if (!expiresAt || Date.now() > expiresAt) {
+                localStorage.removeItem("Authorization");
+                window.location.href = "login.html";
+            }
+        }
+        
+        let noticeList = []
+
+        function fetchNotices() {
+            fetch('/api/notice')
+                .then(response => response.json())
+                .then(data => {
+                    noticeList = data;
+                    const select = document.getElementById('notice-select');
+                    select.innerHTML = '<option value="">请选择公告(选此新建)</option>';
+                    noticeList = data;
+                    noticeList.forEach((notice, index) => {
+                        const option = document.createElement('option');
+                        option.value = index;
+                        option.textContent = notice.title;
+                        select.appendChild(option);
+                    });
+                    document.getElementById('title').value = ''
+                    document.getElementById('number').value = ''
+                    document.getElementById('content').value = '';
+                })
+                .catch(() => {
+                    document.getElementById('error-message').textContent = '加载公告失败';
+                });
+        }
+
+        function loadNotice() {
+            const select = document.getElementById('notice-select');
+            const noticeId = select.value;
+            if (!noticeId) {
+                document.getElementById('title').value = ''
+                document.getElementById('number').value = ''
+                document.getElementById('content').value = '';
+            }
+            document.getElementById('title').value = noticeList[noticeId].title;
+            document.getElementById('number').value = noticeList[noticeId].number;
+            document.getElementById('content').value = noticeList[noticeId].content;
+        }
+
+        function updateNotice() {
+            const select = document.getElementById('notice-select');
+            const noticeId = select.value;
+            const title = document.getElementById('title').value;
+            const number = document.getElementById('number').value;
+            const content = document.getElementById('content').value;
+            const errorMessage = document.getElementById('error-message');
+
+            if (!noticeId) {
+                fetch(`/api/notice`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': token },
+                    body: JSON.stringify({ title, number, content })
+                })
+                .then(response => {
+                    if (response.status === 200) {
+                        return response.json();
+                    } else if (response.status === 401) {
+                        errorMessage.textContent = '非管理员！';
+                        throw new Error();
+                    } else {
+                        errorMessage.textContent = '新建失败';
+                        throw new Error();
+                    }
+                })
+                .then(data => {
+                    if (data.res === "success") {
+                        alert('公告新建成功');
+                        fetchNotices();
+                    }
+                })
+                .catch(() => {
+                });
+            } else {
+                fetch(`/api/notice`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': token },
+                    body: JSON.stringify({ title, number, content })
+                })
+                .then(response => {
+                    if (response.status === 200) {
+                        return response.json();
+                    } else if (response.status === 401) {
+                        errorMessage.textContent = '非管理员！';
+                        throw new Error();
+                    } else {
+                        errorMessage.textContent = '修改失败';
+                        throw new Error();
+                    }
+                })
+                .then(data => {
+                    if (data.res === "success") {
+                        alert('公告修改成功');
+                        fetchNotices();
+                    }
+                })
+                .catch(() => {
+                });
+            }
+        }
+
+        function deleteNotice() {
+            const select = document.getElementById('notice-select');
+            const noticeId = select.value;
+            const number = document.getElementById('number').value;
+
+            const errorMessage = document.getElementById('error-message');
+
+            if (!noticeId) {
+                errorMessage.textContent = '请选择公告';
+                return;
+            }
+
+            fetch(`/api/notice`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json', 'Authorization': token },
+                body: JSON.stringify({ number })
+            }).then(response => {
+                    if (response.status === 200) {
+                        return response.json();
+                    } else if (response.status === 401) {
+                        errorMessage.textContent = '非管理员！';
+                        throw new Error();
+                    } else {
+                        errorMessage.textContent = '删除失败';
+                        throw new Error();
+                    }
+                })
+                .then(data => {
+                    if (data.res === "success") {
+                        alert('公告删除成功');
+                        fetchNotices();
+                    }
+                })
+                .catch(() => {
+                });
+        }
+        checkToken();
+        fetchNotices();
+
+    </script>
+</body>
+</html>

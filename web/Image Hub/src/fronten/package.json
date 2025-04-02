@@ -1,0 +1,29 @@
+{
+  "name": "eagle-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3008",
+    "build": "next build",
+    "start": "next start --port 3008",
+    "lint": "next lint"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@ant-design/icons": "^4.8.0",
+    "@types/justified-layout": "^4.1.0",
+    "@types/node": "18.11.9",
+    "@types/react": "18.0.25",
+    "@types/react-dom": "18.0.9",
+    "antd": "^5.0.2",
+    "eagle-web": "file:",
+    "eslint": "8.28.0",
+    "eslint-config-next": "13.0.5",
+    "justified-layout": "^4.1.0",
+    "next": "13.0.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "recoil": "^0.7.6",
+    "typescript": "4.9.3"
+  }
+}

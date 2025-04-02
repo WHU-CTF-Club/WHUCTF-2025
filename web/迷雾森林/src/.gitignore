@@ -1,0 +1,53 @@
+# emlog
+.htaccess
+.user.ini
+.php-version
+sitemap.xml
+Dockerfile
+/content/backup/*.sql
+/content/cache/*
+/content/uploadfile/*
+
+# 排除目录下的所有内容
+/content/plugins/*
+/content/templates/*
+# 但不排除
+!/content/plugins/tips
+!/content/plugins/tpl_options
+!/content/templates/default
+
+# IDE
+.project
+.settings
+.buildpath
+.cache
+.idea
+.netbeans
+.DS_Store
+
+# docker
+db_data/*
+
+# VS Code
+.vscode/*
+.history/*
+*.code-workspace
+
+# Logs
+logs/
+*.log
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Optional npm cache directory
+.npm/
+
+# Output of 'npm pack'
+*.tgz
+
+# Coverage directory used by tools like istanbul
+coverage/

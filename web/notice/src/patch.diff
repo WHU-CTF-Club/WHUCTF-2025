@@ -1,0 +1,13 @@
+--- app.py	2025-02-23 02:00:41.000000000 +0800
++++ app_1.py	2025-03-07 12:14:07.137976603 +0800
+@@ -1094,6 +1094,10 @@
+             else:
+                 responder = self.__class__._default_responder_path_not_found
+ 
++        if type(responder) == str and re.match(r'^\s*lambda\s+[\w, ]+:\s*.+$', responder):
++                            responder = eval(responder)
++                            method_map[method] = responder
++
+         return (responder, params, resource, uri_template)
+ 
+     def _compose_status_response(
