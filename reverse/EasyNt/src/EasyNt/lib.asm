@@ -1,0 +1,23 @@
+
+.data
+EXTERNDEF FAST_SYSCALL:BYTE
+EXTERNDEF SYSCALL_NR:DWORD
+FAST_SYSCALL BYTE 0
+SYSCALL_NR DWORD 0
+
+.code
+EXTERNDEF MYSYSCALL:PROC
+
+MYSYSCALL PROC
+	mov r10, rcx
+	mov eax, SYSCALL_NR
+	test FAST_SYSCALL, 1
+	jnz slow_call
+	syscall
+	ret
+slow_call:
+	int 2Eh
+	ret
+MYSYSCALL ENDP
+
+END

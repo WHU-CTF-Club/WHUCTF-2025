@@ -1,0 +1,12 @@
+[submodule "3rdparty/windows-syscalls"]
+	path = 3rdparty/windows-syscalls
+	url = https://github.com/j00ru/windows-syscalls.git
+[submodule "3rdparty/ntdoc"]
+	path = 3rdparty/ntdoc
+	url = https://github.com/m417z/ntdoc.git
+[submodule "3rdparty/linux-syscalls"]
+	path = 3rdparty/linux-syscalls
+	url = https://github.com/mebeim/linux-syscalls.git
+[submodule "3rdparty/phnt"]
+	path = 3rdparty/phnt
+	url = https://github.com/winsiderss/phnt.git

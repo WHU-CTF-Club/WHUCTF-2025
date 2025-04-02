@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "dependencies": [
+    "wil",
+    "phnt",
+    "turbobase64",
+    "xorstr"
+  ],
+  "features": {
+    "test": {
+      "dependencies": [
+        "gtest",
+        "benchmark"
+      ],
+      "description": "Build and run tests."
+    }
+  }
+}
